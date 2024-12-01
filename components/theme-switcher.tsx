@@ -23,7 +23,7 @@ export function ThemeSwitcher() {
       variant="outline"
       size="icon"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-      className="fixed top-4 right-4 z-50"
+      className="fixed top-4 left-4 z-50"
       type="button"
     >
       <Sun className={cn(

@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Toaster } from "@/components/ui/toaster";
+import { GitHubRibbon } from '@/components/github-ribbon';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,7 +28,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="relative min-h-screen bg-background antialiased">
-            <ThemeSwitcher />
+            <div className="fixed top-4 left-4">
+              <ThemeSwitcher />
+            </div>
+            <GitHubRibbon />
             {children}
           </div>
           <Toaster />
