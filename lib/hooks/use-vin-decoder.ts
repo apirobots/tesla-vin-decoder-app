@@ -10,6 +10,12 @@ export function useVinDecoder() {
   const [error, setError] = useState('');
   const [decodedData, setDecodedData] = useState<DecodedVin | null>(null);
 
+  const resetState = () => {
+    setVin('');
+    setError('');
+    setDecodedData(null);
+  };
+
   const handleDecode = async () => {
     if (!vin) {
       setError('Please enter a VIN');
@@ -36,5 +42,6 @@ export function useVinDecoder() {
     error,
     decodedData,
     handleDecode,
+    resetState,
   };
 }

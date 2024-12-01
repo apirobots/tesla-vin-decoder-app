@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tesla-inspired styles */
+@layer base {
+  body {
+    @apply bg-tesla-white text-tesla-black;
+    font-family: "Gotham SSm", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-gotham font-medium tracking-wide;
+  }
+}
+
+@layer components {
+  .tesla-button {
+    @apply px-6 py-2 rounded-sm font-medium transition-colors
+           bg-tesla-black text-white hover:bg-tesla-gray
+           dark:bg-tesla-white dark:text-tesla-black dark:hover:bg-tesla-off-white;
+  }
+
+  .tesla-input {
+    @apply w-full px-4 py-2 rounded-sm border border-tesla-gray/20
+           focus:outline-none focus:ring-2 focus:ring-tesla-red/50
+           bg-white dark:bg-tesla-black dark:text-white;
+  }
+
+  .tesla-card {
+    @apply bg-white dark:bg-tesla-black
+           shadow-tesla rounded-sm p-6
+           border border-tesla-gray/10;
+  }
+} 
