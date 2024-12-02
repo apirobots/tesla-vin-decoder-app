@@ -12,11 +12,14 @@ export function validateVin(vin: string): { isValid: boolean; error?: string } {
     };
   }
 
-
   return { isValid: true };
 }
 
 export async function decodeVin(vin: string): Promise<DecodedVin> {
+  if (typeof window !== 'undefined') {
+    throw new Error('This function can only be called from the server');
+  }
+
   // Validate VIN before making the request
   const validation = validateVin(vin);
   if (!validation.isValid) {

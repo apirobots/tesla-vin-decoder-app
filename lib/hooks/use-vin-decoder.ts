@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { decodeVin } from '../services/vin-service';
-import type { DecodedVin } from '../types';
+import { decodeVinAction } from '@/app/actions';
+import type { DecodedVin } from '@/lib/types';
 
 export function useVinDecoder() {
   const [vin, setVin] = useState('');
@@ -17,7 +17,7 @@ export function useVinDecoder() {
   };
 
   const handleDecode = async (paramVin: string) => {
-    const curVin = paramVin ? paramVin : vin;
+    const curVin = paramVin || vin;
     if (!curVin) {
       setError('Please enter a VIN');
       return;
@@ -27,10 +27,17 @@ export function useVinDecoder() {
     setError('');
 
     try {
-      const data = await decodeVin(curVin);
-      setDecodedData(data);
+      const result = await decodeVinAction(curVin);
+      if (result.error) {
+        setError(result.error);
+        setDecodedData(null);
+      } else if (result.data) {
+        setDecodedData(result.data);
+        setError('');
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to decode VIN');
+      setError('Failed to decode VIN');
+      setDecodedData(null);
     } finally {
       setLoading(false);
     }

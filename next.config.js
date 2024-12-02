@@ -8,6 +8,9 @@ const nextConfig = {
     unoptimized: true,
     domains: ['apirobots.github.io', 'tesla-cdn.thron.com']
   },
+  experimental: {
+    serverActions: true,
+  },
 };
 
 module.exports = nextConfig;
