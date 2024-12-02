@@ -60,6 +60,10 @@ To install this project, follow these steps:
 
 3. Enter a Tesla VIN (e.g., `5YJSA1E60MF123456`) in the input box and click the "Decode" button to retrieve vehicle details.
 
+## Screenshots
+
+![Screenshot of Tesla VIN Decoder](screenshot.png)
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps to contribute:
