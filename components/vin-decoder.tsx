@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { Loader2, Car } from 'lucide-react';
-import { VinDetails } from '@/components/vin-details';
-import { VinImages } from '@/components/vin-images';
-import { useVinDecoder } from '@/lib/hooks/use-vin-decoder';
-import { useVinStore } from '@/lib/store';
-import { validateVin } from '@/lib/services/vin-service';
-import { cn } from '@/lib/utils';
+import { useEffect } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Loader2, Car } from "lucide-react";
+import { VinDetails } from "@/components/vin-details";
+import { VinImages } from "@/components/vin-images";
+import { useVinDecoder } from "@/lib/hooks/use-vin-decoder";
+import { useVinStore } from "@/lib/store";
+import { validateVin } from "@/lib/services/vin-service";
+import { cn } from "@/lib/utils";
 
 export function VinDecoder() {
   const router = useRouter();
@@ -29,13 +29,15 @@ export function VinDecoder() {
 
   // Handle VIN from URL path
   useEffect(() => {
-    const pathVin = pathname.split('/').pop();
-    if (pathVin && 
-        pathVin !== vin && 
-        !decodedData && 
-        !loading && 
-        pathVin.length === 17 && 
-        validateVin(pathVin).isValid) {
+    const pathVin = pathname.split("/").pop();
+    if (
+      pathVin &&
+      pathVin !== vin &&
+      !decodedData &&
+      !loading &&
+      pathVin.length === 17 &&
+      validateVin(pathVin).isValid
+    ) {
       setVin(pathVin.toUpperCase());
       handleDecode(pathVin.toUpperCase());
     }
@@ -48,16 +50,13 @@ export function VinDecoder() {
     }
   }, [decodedData, vin, router]);
 
-
   // Listen for store reset
   useEffect(() => {
-    const unsubscribe = useVinStore.subscribe(
-      (state, prevState) => {
-        if (prevState.vin && !state.vin) {
-          resetState();
-        }
+    const unsubscribe = useVinStore.subscribe((state, prevState) => {
+      if (prevState.vin && !state.vin) {
+        resetState();
       }
-    );
+    });
 
     return () => unsubscribe();
   }, [resetState]);
@@ -66,9 +65,9 @@ export function VinDecoder() {
   const handleVinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVin = e.target.value.toUpperCase();
     setVin(newVin);
-    
+
     if (!newVin) return;
-    
+
     const { isValid, error: validationError } = validateVin(newVin);
     if (!isValid && newVin.length === 17) {
       setError(validationError);
@@ -77,7 +76,11 @@ export function VinDecoder() {
 
   // Handle Enter key press
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !loading && !(vin.length === 17 && !validateVin(vin).isValid)) {
+    if (
+      e.key === "Enter" &&
+      !loading &&
+      !(vin.length === 17 && !validateVin(vin).isValid)
+    ) {
       handleDecode(vin);
     }
   };
@@ -99,12 +102,16 @@ export function VinDecoder() {
             maxLength={17}
             disabled={loading}
             className={cn(
-              vin.length === 17 && !validateVin(vin).isValid && "border-destructive"
+              vin.length === 17 &&
+                !validateVin(vin).isValid &&
+                "border-destructive"
             )}
           />
           <Button
             onClick={handleClick}
-            disabled={loading || (vin.length === 17 && !validateVin(vin).isValid)}
+            disabled={
+              loading || (vin.length === 17 && !validateVin(vin).isValid)
+            }
             className="min-w-[100px] relative"
           >
             {loading ? (
@@ -120,9 +127,7 @@ export function VinDecoder() {
             )}
           </Button>
         </div>
-        {error && (
-          <p className="mt-2 text-sm text-destructive">{error}</p>
-        )}
+        {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
       </Card>
 
       {loading && (
@@ -134,13 +139,33 @@ export function VinDecoder() {
         </div>
       )}
 
-      {decodedData && !loading && (
+      {decodedData && !loading ? (
         <div className="space-y-6">
           <VinDetails data={decodedData} vin={vin} />
-          <VinImages 
-            carImages={decodedData.car_images} 
+          <VinImages
+            carImages={decodedData.car_images}
             vinLocations={decodedData.vin_locations}
           />
+        </div>
+      ) : (
+        <div className="app-info">
+          <h1>Welcome to Our VIN Decoder!</h1>
+          <p>
+            Decode your vehicle's VIN to get detailed information about its
+            specificationse.
+          </p>
+          <h2>Why Use Our VIN Decoder?</h2>
+          <ul>
+            <li>
+              📊 Detailed Specifications: Understand your vehicle's features,
+              engine type, and performance metrics.
+            </li>
+          </ul>
+          <h2>How It Works</h2>
+          <p>
+            Simply enter your vehicle's VIN in the search bar, and our tool will
+            decode it to provide you with all the information you need.
+          </p>
         </div>
       )}
     </div>
