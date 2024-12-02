@@ -52,6 +52,9 @@ export function VinImages({ carImages, vinLocations }: VinImagesProps) {
               </button>
             ))}
           </div>
+          <p className="text-sm">
+            Images are copyright © Tesla, Inc. All rights reserved.
+          </p>
         </TabsContent>
 
         <TabsContent value="vin" className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -65,6 +68,9 @@ export function VinImages({ carImages, vinLocations }: VinImagesProps) {
               />
             </div>
           ))}
+          <p className="text-sm">
+            Images are copyright © Tesla, Inc. All rights reserved.
+          </p>
         </TabsContent>
       </Tabs>
     </Card>
