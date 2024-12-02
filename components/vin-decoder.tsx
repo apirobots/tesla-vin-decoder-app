@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -8,11 +10,12 @@ import { VinDetails } from '@/components/vin-details';
 import { VinImages } from '@/components/vin-images';
 import { useVinDecoder } from '@/lib/hooks/use-vin-decoder';
 import { useVinStore } from '@/lib/store';
-import { useEffect } from 'react';
 import { validateVin } from '@/lib/services/vin-service';
 import { cn } from '@/lib/utils';
 
 export function VinDecoder() {
+  const router = useRouter();
+  const pathname = usePathname();
   const {
     vin,
     setVin,
@@ -21,15 +24,35 @@ export function VinDecoder() {
     decodedData,
     handleDecode,
     resetState,
+    setError,
   } = useVinDecoder();
 
-  const resetVin = useVinStore(state => state.resetVin);
+  // Handle VIN from URL path
+  useEffect(() => {
+    const pathVin = pathname.split('/').pop();
+    if (pathVin && 
+        pathVin !== vin && 
+        !decodedData && 
+        !loading && 
+        pathVin.length === 17 && 
+        validateVin(pathVin).isValid) {
+      setVin(pathVin.toUpperCase());
+      handleDecode(pathVin.toUpperCase());
+    }
+  }, [pathname, decodedData, loading, setVin, handleDecode, vin]);
+
+  // Update URL when VIN is decoded
+  useEffect(() => {
+    if (decodedData && vin) {
+      router.push(`/vins/${vin}`);
+    }
+  }, [decodedData, vin, router]);
+
 
   // Listen for store reset
   useEffect(() => {
     const unsubscribe = useVinStore.subscribe(
       (state, prevState) => {
-        // If vin was reset in store (changed to empty), reset local state
         if (prevState.vin && !state.vin) {
           resetState();
         }
@@ -44,14 +67,24 @@ export function VinDecoder() {
     const newVin = e.target.value.toUpperCase();
     setVin(newVin);
     
-    // Clear error when input is empty
     if (!newVin) return;
     
-    // Show validation errors as user types
     const { isValid, error: validationError } = validateVin(newVin);
     if (!isValid && newVin.length === 17) {
       setError(validationError);
     }
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !loading && !(vin.length === 17 && !validateVin(vin).isValid)) {
+      handleDecode(vin);
+    }
+  };
+
+  // Add click handler for the decode button
+  const handleClick = () => {
+    handleDecode(vin);
   };
 
   return (
@@ -62,6 +95,7 @@ export function VinDecoder() {
             placeholder="Enter Tesla VIN (e.g., 5YJSA1E60MF123456)"
             value={vin}
             onChange={handleVinChange}
+            onKeyPress={handleKeyPress}
             maxLength={17}
             disabled={loading}
             className={cn(
@@ -69,7 +103,7 @@ export function VinDecoder() {
             )}
           />
           <Button
-            onClick={handleDecode}
+            onClick={handleClick}
             disabled={loading || (vin.length === 17 && !validateVin(vin).isValid)}
             className="min-w-[100px] relative"
           >
@@ -102,7 +136,7 @@ export function VinDecoder() {
 
       {decodedData && !loading && (
         <div className="space-y-6">
-          <VinDetails data={decodedData} />
+          <VinDetails data={decodedData} vin={vin} />
           <VinImages 
             carImages={decodedData.car_images} 
             vinLocations={decodedData.vin_locations}

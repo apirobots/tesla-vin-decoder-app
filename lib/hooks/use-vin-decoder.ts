@@ -16,8 +16,9 @@ export function useVinDecoder() {
     setDecodedData(null);
   };
 
-  const handleDecode = async () => {
-    if (!vin) {
+  const handleDecode = async (paramVin: string) => {
+    const curVin = paramVin ? paramVin : vin;
+    if (!curVin) {
       setError('Please enter a VIN');
       return;
     }
@@ -26,7 +27,7 @@ export function useVinDecoder() {
     setError('');
 
     try {
-      const data = await decodeVin(vin);
+      const data = await decodeVin(curVin);
       setDecodedData(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to decode VIN');
@@ -43,5 +44,6 @@ export function useVinDecoder() {
     decodedData,
     handleDecode,
     resetState,
+    setError,
   };
 }

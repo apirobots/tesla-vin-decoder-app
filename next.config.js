@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },
   images: { 
     unoptimized: true,
-    domains: ['apirobots.github.io']
+    domains: ['apirobots.github.io', 'tesla-cdn.thron.com']
   },
 };
 
