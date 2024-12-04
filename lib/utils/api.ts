@@ -1,7 +1,8 @@
 import { API_CONFIG } from '../config/api';
 
 export async function fetchFromApi<T>(endpoint: string): Promise<T> {
-  const response = await fetch(`${API_CONFIG.BASE_URL}${endpoint}`, {
+  const url = API_CONFIG.API_BASE_URL;
+  const response = await fetch(`${url}${endpoint}`, {
     headers: {
       'X-RapidAPI-Host': API_CONFIG.RAPIDAPI_HOST,
       'X-RapidAPI-Key': API_CONFIG.RAPIDAPI_KEY,

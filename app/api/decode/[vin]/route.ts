@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+
 export async function GET(
   request: Request,
   { params }: { params: { vin: string } }
@@ -7,12 +8,13 @@ export async function GET(
   const vin = params.vin;
 
   try {
+    const url = process.env.API_BASE_URL as string;
     const response = await fetch(
-      `https://[host]/v1/vins/${vin}`,
+      `https://${url}/vins/${vin}`,
       {
         headers: {
-          'X-RapidAPI-Host': '[host]',
-          'X-RapidAPI-Key': process.env.[key] || '',
+          'X-RapidAPI-Host': process.env.RAPIDAPI_HOST as string,
+          'X-RapidAPI-Key': process.env.RAPIDAPI_KEY as string,
         },
       }
     );

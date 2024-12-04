@@ -70,7 +70,7 @@ export function VinDecoder() {
 
     const { isValid, error: validationError } = validateVin(newVin);
     if (!isValid && newVin.length === 17) {
-      setError(validationError);
+      setError(validationError || 'Invalid VIN!');
     }
   };
 
